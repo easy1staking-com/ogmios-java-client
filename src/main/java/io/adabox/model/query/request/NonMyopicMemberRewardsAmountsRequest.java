@@ -16,7 +16,6 @@ public class NonMyopicMemberRewardsAmountsRequest extends QueryRequest {
         return "{\""+QUERY_TYPE.getValue()+"\": "+amounts.toString()+" }" ;
     }
 
-    @Override
     public String getMirror() {
         return "\"object\":\""+QUERY_TYPE.getValue()+"\",\"msg_id\":"+getMsgId();
     }

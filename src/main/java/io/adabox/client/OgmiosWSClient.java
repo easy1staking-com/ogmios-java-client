@@ -1,19 +1,16 @@
 package io.adabox.client;
 
-import io.adabox.model.base.Error;
-import io.adabox.model.base.Message;
 import io.adabox.model.base.Request;
-import io.adabox.model.base.Response;
 import io.adabox.model.base.iface.LocalChainSync;
 import io.adabox.model.base.iface.LocalStateQuery;
 import io.adabox.model.base.iface.LocalTxSubmission;
-import io.adabox.model.chain.request.RequestNext;
 import io.adabox.model.chain.response.AcquireResponse;
 import io.adabox.model.chain.response.RequestNextResponse;
-import io.adabox.model.query.request.*;
+import io.adabox.model.query.request.BlockHeightRequest;
+import io.adabox.model.query.request.ChainTipRequest;
+import io.adabox.model.query.request.CurrentEpochRequest;
+import io.adabox.model.query.request.CurrentProtocolParametersRequest;
 import io.adabox.model.query.response.*;
-import io.adabox.model.tx.request.EvaluateTxRequest;
-import io.adabox.model.tx.request.SubmitTxRequest;
 import io.adabox.model.tx.response.EvaluateTxResponse;
 import io.adabox.model.tx.response.SubmitTxResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +30,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class OgmiosWSClient extends WebSocketClient implements LocalTxSubmission, LocalStateQuery, LocalChainSync {
 
     private static final long TIMEOUT = 60; // Sec
-    private final AtomicLong msgId = new AtomicLong();
-    private final ConcurrentHashMap<Long, BlockingQueue<Message>> blockingQueueConcurrentHashMap = new ConcurrentHashMap<>();
+    private final AtomicLong msgId = new AtomicLong(0L);
+    private final ConcurrentHashMap<Long, BlockingQueue<OgmiosResponse>> blockingQueueConcurrentHashMap = new ConcurrentHashMap<>();
 
     public OgmiosWSClient(URI serverURI) {
         super(serverURI);
@@ -48,17 +45,17 @@ public class OgmiosWSClient extends WebSocketClient implements LocalTxSubmission
 
     @Override
     public void onMessage(String message) {
-        log.debug("Received: {}", message);
-        Response response = Response.deserialize(message);
+        log.info("Received: {}", message);
+        OgmiosResponse response = OgmiosResponse.deserialize(message);
         if (response == null) {
             log.error("Response is Null");
             return;
         }
-        if (response.getFault() != null) {
-            log.error("Error: {}", ((Error) response).getErrorMsg());
-            return;
-        }
-        if (blockingQueueConcurrentHashMap.get(response.getMsgId()).offer(response) && log.isDebugEnabled()) {
+//        if (response.getFault() != null) {
+//            log.error("Error: {}", ((Error) response).getErrorMsg());
+//            return;
+//        }
+        if (blockingQueueConcurrentHashMap.get(Long.valueOf(response.id)).offer(response) && log.isDebugEnabled()) {
             log.debug("Message Offered: {}", message);
         }
     }
@@ -75,15 +72,15 @@ public class OgmiosWSClient extends WebSocketClient implements LocalTxSubmission
         // if the error is fatal then onClose will be called additionally
     }
 
-    private Response send(Request request) {
-        Response queryResponse = null;
+    private OgmiosResponse send(Request request) {
+        OgmiosResponse queryResponse = null;
         long msgIdentifier = msgId.incrementAndGet();
         request.setMsgId(msgIdentifier);
         send(request.toString());
-        BlockingQueue<Message> messageBlockingQueue = new ArrayBlockingQueue<>(1);
+        BlockingQueue<OgmiosResponse> messageBlockingQueue = new ArrayBlockingQueue<>(1);
         blockingQueueConcurrentHashMap.put(msgIdentifier, messageBlockingQueue);
         try {
-            queryResponse = (Response) messageBlockingQueue.poll(TIMEOUT, TimeUnit.SECONDS);
+            queryResponse = messageBlockingQueue.poll(TIMEOUT, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             log.error(e.getMessage());
             Thread.currentThread().interrupt();
@@ -98,7 +95,7 @@ public class OgmiosWSClient extends WebSocketClient implements LocalTxSubmission
 
     @Override
     public RequestNextResponse requestNext() {
-        send(new RequestNext(msgId.incrementAndGet()).toString());
+//        send(new RequestNext(msgId.incrementAndGet()).toString());
         return null;
     }
 
@@ -109,7 +106,8 @@ public class OgmiosWSClient extends WebSocketClient implements LocalTxSubmission
         if (cborData.length == 0) {
             throw new InvalidParameterException();
         }
-        return (SubmitTxResponse) send(new SubmitTxRequest(cborData));
+//        return (SubmitTxResponse) send(new SubmitTxRequest(cborData));
+        return null;
     }
 
     @Override
@@ -117,107 +115,125 @@ public class OgmiosWSClient extends WebSocketClient implements LocalTxSubmission
         if (cborData.length == 0) {
             throw new InvalidParameterException();
         }
-        Response response = send(new EvaluateTxRequest(cborData));
-        if (response.getFault() == null)
-            return (EvaluateTxResponse) response;
-        else
-            throw new RuntimeException(response.toString());
+//        Response response = send(new EvaluateTxRequest(cborData));
+//        if (response.getFault() == null)
+//            return (EvaluateTxResponse) response;
+//        else
+//            throw new RuntimeException(response.toString());
+        return null;
     }
 
     /* LocalStateQuery */
 
     @Override
-    public BlockHeight blockHeight() {
-        return (BlockHeight) send(new BlockHeightRequest());
+    public OgmiosResponse.BlockHeight blockHeight() {
+        return (OgmiosResponse.BlockHeight) send(new BlockHeightRequest());
     }
 
     @Override
-    public ChainTip chainTip() {
-        return (ChainTip) send(new ChainTipRequest());
+    public OgmiosResponse.ChainTip chainTip() {
+        return (OgmiosResponse.ChainTip) send(new ChainTipRequest());
     }
 
     @Override
-    public CurrentProtocolParameters currentProtocolParameters() {
-        return (CurrentProtocolParameters) send(new CurrentProtocolParametersRequest());
+    public OgmiosResponse.CurrentProtocolParameters currentProtocolParameters() {
+        return (OgmiosResponse.CurrentProtocolParameters) send(new CurrentProtocolParametersRequest());
     }
 
     @Override
     public DelegationsAndRewards delegationsAndRewards(List<String> credentials) {
-        return (DelegationsAndRewards) send(new DelegationsAndRewardsRequest(credentials));
+//        return (DelegationsAndRewards) send(new DelegationsAndRewardsRequest(credentials));
+        return null;
     }
 
     @Override
     public EraStart eraStart() {
-        return (EraStart) send(new EraStartRequest());
+//        return (EraStart) send(new EraStartRequest());
+        return null;
     }
 
     @Override
     public EraSummaries eraSummaries() {
-        return (EraSummaries) send(new EraSummariesRequest());
+//        return (EraSummaries) send(new EraSummariesRequest());
+        return null;
     }
 
     @Override
-    public CurrentEpoch currentEpoch() {
-        return (CurrentEpoch) send(new CurrentEpochRequest());
+    public OgmiosResponse.CurrentEpoch currentEpoch() {
+        return (OgmiosResponse.CurrentEpoch) send(new CurrentEpochRequest());
     }
 
     @Override
     public GenesisConfig genesisConfig() {
-        return (GenesisConfig) send(new GenesisConfigRequest());
+//        return (GenesisConfig) send(new GenesisConfigRequest());
+        return null;
     }
+
 
     @Override
     public LedgerTip ledgerTip() {
-        return (LedgerTip) send(new LedgerTipRequest());
+//        return (LedgerTip) send(new LedgerTipRequest());
+        return null;
+
     }
 
     @Override
     public NonMyopicMemberRewards nonMyopicMemberRewardsByCredentials(List<String> credentials) {
-        return (NonMyopicMemberRewards) send(new NonMyopicMemberRewardsRequest(credentials));
+//        return (NonMyopicMemberRewards) send(new NonMyopicMemberRewardsRequest(credentials));
+        return null;
     }
 
     @Override
     public NonMyopicMemberRewards nonMyopicMemberRewardsByAmounts(List<Integer> amounts) {
-        return (NonMyopicMemberRewards) send(new NonMyopicMemberRewardsAmountsRequest(amounts));
+//        return (NonMyopicMemberRewards) send(new NonMyopicMemberRewardsAmountsRequest(amounts));
+        return null;
     }
 
     @Override
     public PoolIds poolIds() {
-        return (PoolIds) send(new PoolIdsRequest());
+//        return (PoolIds) send(new PoolIdsRequest());
+        return null;
     }
 
     @Override
     public PoolParameters poolParameters(List<String> bech32PoolIds) {
-        return (PoolParameters) send(new PoolParametersRequest(bech32PoolIds));
+//        return (PoolParameters) send(new PoolParametersRequest(bech32PoolIds));
+        return null;
     }
 
     @Override
     public PoolsRanking poolsRanking() {
-        return (PoolsRanking) send(new PoolsRankingRequest());
+//        return (PoolsRanking) send(new PoolsRankingRequest());
+        return null;
     }
 
     @Override
     public ProposedProtocolParameters proposedProtocolParameters() {
-        return (ProposedProtocolParameters) send(new ProposedProtocolParametersRequest());
+//        return (ProposedProtocolParameters) send(new ProposedProtocolParametersRequest());
+        return null;
     }
 
     @Override
     public RewardsProvenance rewardsProvenance() {
-        return (RewardsProvenance) send(new RewardsProvenanceRequest());
+//        return (RewardsProvenance) send(new RewardsProvenanceRequest());
+        return null;
     }
 
     @Override
     public StakeDistribution stakeDistribution() {
-        return (StakeDistribution) send(new StakeDistributionRequest());
+//        return (StakeDistribution) send(new StakeDistributionRequest());
+        return null;
     }
 
     @Override
     public SystemStart systemStart() {
-        return (SystemStart) send(new SystemStartRequest());
+//        return (SystemStart) send(new SystemStartRequest());
+        return null;
     }
 
     @Override
     public UtxoByAddress utxoByAddress(String address) throws InvalidParameterException {
-        return (UtxoByAddress) send(new UtxoByAddressRequest(address));
+//        return (UtxoByAddress) send(new UtxoByAddressRequest(address));
+        return null;
     }
 }

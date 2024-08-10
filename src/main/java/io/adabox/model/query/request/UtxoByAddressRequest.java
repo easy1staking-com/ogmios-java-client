@@ -18,7 +18,6 @@ public class UtxoByAddressRequest extends QueryRequest {
         return "{\""+QUERY_TYPE.getValue()+"\": [\""+address+"\"] }" ;
     }
 
-    @Override
     public String getMirror() {
         return "\"object\":\""+QUERY_TYPE.getValue()+"\",\"msg_id\":"+getMsgId();
     }

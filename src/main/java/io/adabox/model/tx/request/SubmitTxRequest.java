@@ -17,16 +17,10 @@ public class SubmitTxRequest extends Request {
     }
 
     @Override
-    public String getMethodType() {
+    public String getMethod() {
         return METHOD_TYPE.getValue();
     }
 
-    @Override
-    public String getArgs() {
-        return "\"bytes\":\"" + Base64.getEncoder().encodeToString(bytes) + "\"";
-    }
-
-    @Override
     public String getMirror() {
         return "\"object\":\"" + METHOD_TYPE.getValue() + "\",\"msg_id\":" + getMsgId();
     }

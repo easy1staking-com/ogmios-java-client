@@ -1,15 +1,30 @@
 package io.adabox.model.base;
 
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@Slf4j
 public abstract class Request extends Message {
 
-    private static final String TYPE = "jsonwsp/request";
-    private static final String VERSION = "1.0";
-    private static final String SERVICE_NAME = "ogmios";
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    static class OgmiosRequest {
+
+        private String jsonrpc;
+
+        private String method;
+
+        private String id;
+
+    }
 
     protected Request(long msgId) {
         super(msgId);
@@ -17,12 +32,19 @@ public abstract class Request extends Message {
 
     @Override
     public String toString() {
-        return "{\"type\":\"" + TYPE + "\",\"version\":\"" + VERSION + "\",\"servicename\":\"" + SERVICE_NAME + "\",\"methodname\":\"" + getMethodType() + "\",\"mirror\":{" + getMirror() + "},\"args\":{" + getArgs() + "}}";
+        OgmiosRequest request = OgmiosRequest.builder()
+                .jsonrpc("2.0")
+                .id(String.valueOf(getMsgId()))
+                .method(getMethod()).build();
+        try {
+            String jsonRequest = objectMapper.writeValueAsString(request);
+            log.info("jsonRequest: {}", jsonRequest);
+            return jsonRequest;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    protected abstract String getMethodType();
+    protected abstract String getMethod();
 
-    public abstract String getArgs();
-
-    public abstract String getMirror();
 }

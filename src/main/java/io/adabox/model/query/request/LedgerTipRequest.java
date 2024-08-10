@@ -13,7 +13,6 @@ public class LedgerTipRequest extends QueryRequest {
         return "\""+QUERY_TYPE.getValue()+"\"";
     }
 
-    @Override
     public String getMirror() {
         return "\"object\":\""+QUERY_TYPE.getValue()+"\",\"msg_id\":"+getMsgId();
     }

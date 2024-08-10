@@ -16,16 +16,10 @@ public class EvaluateTxRequest extends Request {
     }
 
     @Override
-    protected String getMethodType() {
+    protected String getMethod() {
         return METHOD_TYPE.getValue();
     }
 
-    @Override
-    public String getArgs() {
-        return "\"evaluate\":\"" + HexUtil.encodeHexString(cborBytes) + "\"";
-    }
-
-    @Override
     public String getMirror() {
         return "\"object\":\"" + METHOD_TYPE.getValue() + "\",\"msg_id\":" + getMsgId();
     }

@@ -16,7 +16,7 @@ public class RequestNext extends Request {
     }
 
     @Override
-    public String getMethodType() {
+    public String getMethod() {
         return METHOD_TYPE.getValue();
     }
 

@@ -7,14 +7,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChainTipRequest extends QueryRequest {
 
-    private static final QueryType QUERY_TYPE = QueryType.CHAIN_TIP;
-
-    public String getQueryArgs() {
-        return "\""+QUERY_TYPE.getValue()+"\"";
-    }
-
     @Override
-    public String getMirror() {
-        return "\"object\":\""+QUERY_TYPE.getValue()+"\",\"msg_id\":"+getMsgId();
+    public String getMethod() {
+        return "queryLedgerState/tip";
     }
 }

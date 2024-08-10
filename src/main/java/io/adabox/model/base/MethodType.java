@@ -2,10 +2,10 @@ package io.adabox.model.base;
 
 public enum MethodType {
 
-    QUERY("Query"),
-    REQUEST_NEXT("RequestNext"),
-    SUBMIT_TX("SubmitTx"),
-    EVALUATE_TX("EvaluateTx");
+    QUERY("query"),
+    REQUEST_NEXT("requestNext"),
+    SUBMIT_TX("submitTx"),
+    EVALUATE_TX("evaluateTx");
 
     private final String value;
 

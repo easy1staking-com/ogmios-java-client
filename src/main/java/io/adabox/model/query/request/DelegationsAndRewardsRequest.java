@@ -17,7 +17,6 @@ public class DelegationsAndRewardsRequest extends QueryRequest {
         return "{\""+QUERY_TYPE.getValue()+"\": ["+wrapWithQuotesAndJoin(credentials)+"] }" ;
     }
 
-    @Override
     public String getMirror() {
         return "\"object\":\""+QUERY_TYPE.getValue()+"\",\"msg_id\":"+getMsgId();
     }

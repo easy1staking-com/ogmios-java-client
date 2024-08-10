@@ -14,11 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RawResponse {
 
-    private String type;
-    private String version;
-    private String servicename;
-    private String methodname;
-    private JsonNode fault;
+    private String id;
+    private String jsonrpc;
+    private String method;
     private JsonNode result;
-    private JsonNode reflection;
 }

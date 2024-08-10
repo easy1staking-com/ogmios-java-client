@@ -13,28 +13,28 @@ public interface LocalStateQuery {
      *
      * @return {@link BlockHeight}
      */
-    BlockHeight blockHeight();
+    OgmiosResponse.BlockHeight blockHeight();
 
     /**
      * The chain’s current tip.
      *
      * @return {@link ChainTip}
      */
-    ChainTip chainTip();
+    OgmiosResponse.ChainTip chainTip();
 
     /**
      * Get the current Epoch.
      *
      * @return {@link CurrentEpoch}
      */
-    CurrentEpoch currentEpoch();
+    OgmiosResponse.CurrentEpoch currentEpoch();
 
     /**
      * Get the current Protocol Parameters.
      *
      * @return {@link CurrentProtocolParameters}
      */
-    CurrentProtocolParameters currentProtocolParameters();
+    OgmiosResponse.CurrentProtocolParameters currentProtocolParameters();
 
     /**
      * Current delegation settings and rewards of given reward accounts.
