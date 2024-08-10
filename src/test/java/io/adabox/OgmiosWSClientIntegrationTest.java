@@ -79,7 +79,7 @@ class OgmiosWSClientIntegrationTest {
 
     @Test
     void eraStartTest() {
-        EraStart eraStart = ogmiosTestnetClient.eraStart();
+        OgmiosResponse.EraStart eraStart = ogmiosTestnetClient.eraStart();
         Assertions.assertNotNull(eraStart);
         log.info(eraStart.toString());
     }

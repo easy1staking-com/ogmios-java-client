@@ -6,10 +6,7 @@ import io.adabox.model.base.iface.LocalStateQuery;
 import io.adabox.model.base.iface.LocalTxSubmission;
 import io.adabox.model.chain.response.AcquireResponse;
 import io.adabox.model.chain.response.RequestNextResponse;
-import io.adabox.model.query.request.BlockHeightRequest;
-import io.adabox.model.query.request.ChainTipRequest;
-import io.adabox.model.query.request.CurrentEpochRequest;
-import io.adabox.model.query.request.CurrentProtocolParametersRequest;
+import io.adabox.model.query.request.*;
 import io.adabox.model.query.response.*;
 import io.adabox.model.tx.response.EvaluateTxResponse;
 import io.adabox.model.tx.response.SubmitTxResponse;
@@ -147,9 +144,8 @@ public class OgmiosWSClient extends WebSocketClient implements LocalTxSubmission
     }
 
     @Override
-    public EraStart eraStart() {
-//        return (EraStart) send(new EraStartRequest());
-        return null;
+    public OgmiosResponse.EraStart eraStart() {
+        return (OgmiosResponse.EraStart) send(new EraStartRequest());
     }
 
     @Override

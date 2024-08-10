@@ -49,7 +49,7 @@ public interface LocalStateQuery {
      *
      * @return {@link EraStart}
      */
-    EraStart eraStart();
+    OgmiosResponse.EraStart eraStart();
 
     /**
      * Era bounds and slotting parameters details, required for proper slot arithmetic.

@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
         @JsonSubTypes.Type(value = OgmiosResponse.ChainTip.class, name = "queryLedgerState/tip"),
         @JsonSubTypes.Type(value = OgmiosResponse.CurrentEpoch.class, name = "queryLedgerState/epoch"),
         @JsonSubTypes.Type(value = OgmiosResponse.CurrentProtocolParameters.class, name = "queryLedgerState/protocolParameters"),
+        @JsonSubTypes.Type(value = OgmiosResponse.EraStart.class, name = "queryLedgerState/eraStart"),
 })
 @Slf4j
 public class OgmiosResponse {
@@ -45,6 +46,12 @@ public class OgmiosResponse {
     public static class CurrentProtocolParameters extends OgmiosResponse {
 
         public ProtocolParametersV650 result;
+
+    }
+
+    public static class EraStart extends OgmiosResponse {
+
+        public io.adabox.model.query.response.models.EraStart result;
 
     }
 
