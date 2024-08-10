@@ -176,7 +176,7 @@ class OgmiosWSClientIntegrationTest {
 
     @Test
     void utxoByAddressTest() {
-        UtxoByAddress utxoByAddress = ogmiosTestnetClient.utxoByAddress("addr_test1qz0xcyfuwkf6a2c8g0mhjdaxxvtuw2u04dqjx7tt2gwaq5522z65y7wauh6rryspdn7xrg5u7nkf5ung6qk5dn3a7u8syvce7n");
+        OgmiosResponse.UtxoByAddress utxoByAddress = ogmiosTestnetClient.utxoByAddress("addr1qx7k8gr565hmzas52kfh6razhvh359gg3ml0gh3vwffyn99xaumjxz2advgrnaf5umuxg5a4rhq5j0vm4927rpt3qa3qyakm64");
         Assertions.assertNotNull(utxoByAddress);
         log.info(utxoByAddress.toString());
     }

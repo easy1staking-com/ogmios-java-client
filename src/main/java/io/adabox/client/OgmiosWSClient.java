@@ -228,8 +228,7 @@ public class OgmiosWSClient extends WebSocketClient implements LocalTxSubmission
     }
 
     @Override
-    public UtxoByAddress utxoByAddress(String address) throws InvalidParameterException {
-//        return (UtxoByAddress) send(new UtxoByAddressRequest(address));
-        return null;
+    public OgmiosResponse.UtxoByAddress utxoByAddress(String address) throws InvalidParameterException {
+        return (OgmiosResponse.UtxoByAddress) send(new UtxoByAddressRequest(address));
     }
 }

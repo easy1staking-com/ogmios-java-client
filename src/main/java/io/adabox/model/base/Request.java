@@ -22,6 +22,8 @@ public abstract class Request extends Message {
 
         private String method;
 
+        private Object params;
+
         private String id;
 
     }
@@ -35,7 +37,9 @@ public abstract class Request extends Message {
         OgmiosRequest request = OgmiosRequest.builder()
                 .jsonrpc("2.0")
                 .id(String.valueOf(getMsgId()))
-                .method(getMethod()).build();
+                .method(getMethod())
+                .params(getParams())
+                .build();
         try {
             String jsonRequest = objectMapper.writeValueAsString(request);
             log.info("jsonRequest: {}", jsonRequest);
@@ -46,5 +50,9 @@ public abstract class Request extends Message {
     }
 
     protected abstract String getMethod();
+
+    protected Object getParams() {
+        return null;
+    }
 
 }

@@ -2,6 +2,7 @@ package io.adabox.model.query.response.models;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.adabox.model.Amount;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public class Utxo {
     private List<Amount> amountList;
     private String datum;
 
-    public static Utxo deserialize(ArrayNode arrayNode) {
+    public static Utxo deserialize(JsonNode arrayNode) {
         Utxo utxo = null;
         Iterator<JsonNode> iterator = arrayNode.iterator();
         String txId = null;

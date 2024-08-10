@@ -32,7 +32,7 @@ public class UtxoByAddress extends QueryResponse {
     public static UtxoByAddress deserialize(long msgId, JsonNode jsonNode) {
         List<Utxo> utxos = new ArrayList<>();
         for (JsonNode node : jsonNode) {
-            utxos.add(Utxo.deserialize((ArrayNode) node));
+            utxos.add(Utxo.deserialize( node));
         }
         return new UtxoByAddress(msgId, utxos);
     }

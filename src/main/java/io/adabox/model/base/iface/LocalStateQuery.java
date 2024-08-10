@@ -148,5 +148,5 @@ public interface LocalStateQuery {
      * @param address Wallet Address
      * @return {@link UtxoByAddress}
      */
-    UtxoByAddress utxoByAddress(String address) throws InvalidParameterException;
+    OgmiosResponse.UtxoByAddress utxoByAddress(String address) throws InvalidParameterException;
 }
