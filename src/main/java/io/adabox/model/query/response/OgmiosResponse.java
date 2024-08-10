@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.adabox.model.query.response.models.Point;
+import io.adabox.model.query.response.models.ProtocolParametersV650;
 import lombok.extern.slf4j.Slf4j;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "method", visible = true)
@@ -43,7 +44,7 @@ public class OgmiosResponse {
 
     public static class CurrentProtocolParameters extends OgmiosResponse {
 
-        public Long result;
+        public ProtocolParametersV650 result;
 
     }
 

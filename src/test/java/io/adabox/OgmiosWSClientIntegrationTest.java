@@ -2,13 +2,13 @@ package io.adabox;
 
 import io.adabox.client.OgmiosWSClient;
 import io.adabox.model.query.response.*;
+import io.adabox.model.query.response.models.ProtocolParametersV650;
 import io.adabox.model.tx.response.EvaluateTxResponse;
 import io.adabox.model.tx.response.SubmitTxResponse;
 import io.adabox.util.HexUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 
-import javax.net.ssl.SSLSocketFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Base64;
@@ -27,7 +27,7 @@ class OgmiosWSClientIntegrationTest {
         ogmiosTestnetClient = new OgmiosWSClient(new URI("ws://ryzen:31337/"));
 //        ogmiosTestnetClient.setSocketFactory(SSLSocketFactory.getDefault());
         ogmiosTestnetClient.connectBlocking(60, TimeUnit.SECONDS);
-        ogmiosMainnetClient =  new OgmiosWSClient(new URI("ws://ryzen:31337/"));
+        ogmiosMainnetClient = new OgmiosWSClient(new URI("ws://ryzen:31337/"));
 //        ogmiosMainnetClient.setSocketFactory(SSLSocketFactory.getDefault());
         ogmiosMainnetClient.connectBlocking(60, TimeUnit.SECONDS);
     }
@@ -57,11 +57,14 @@ class OgmiosWSClientIntegrationTest {
     void currentProtocolParametersTest() {
         OgmiosResponse.CurrentProtocolParameters currentProtocolParameters = ogmiosTestnetClient.currentProtocolParameters();
         Assertions.assertNotNull(currentProtocolParameters);
-//        Assertions.assertNotNull(currentProtocolParameters.getProtocolParameters());
-//        Assertions.assertEquals("500000000", currentProtocolParameters.getProtocolParameters().getPoolDeposit());
-//        Assertions.assertEquals("4310", currentProtocolParameters.getProtocolParameters().getCoinsPerUtxoByte());
-//        Assertions.assertNotNull(currentProtocolParameters.getProtocolParameters().getPoolRetirementEpochBound());
-//        Assertions.assertNotNull(currentProtocolParameters.getProtocolParameters().getDesiredNumberOfPools());
+        Assertions.assertNotNull(currentProtocolParameters.result);
+        ProtocolParametersV650 protocolParametersV650 = currentProtocolParameters.result;
+        Assertions.assertEquals(500000000, protocolParametersV650.getStakePoolDeposit().getAda().getLovelace());
+        Assertions.assertEquals(4310, protocolParametersV650.getMinUtxoDepositCoefficient());
+        Assertions.assertEquals(18, protocolParametersV650.getStakePoolRetirementEpochBound());
+        Assertions.assertEquals(500, protocolParametersV650.getDesiredNumberOfStakePools());
+        Assertions.assertNotEquals(0, protocolParametersV650.getPlutusCostModels().getPlutusV1().size());
+        Assertions.assertNotEquals(0, protocolParametersV650.getPlutusCostModels().getPlutusV2().size());
         log.info(currentProtocolParameters.toString());
     }
 
