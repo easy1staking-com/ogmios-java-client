@@ -26,7 +26,7 @@ public class EraStart extends QueryResponse {
 
     public static EraStart deserialize(long msgId, JsonNode jsonNode) {
         EraStart eraStart = new EraStart(msgId);
-        eraStart.setBound(Bound.deserialize(jsonNode));
+//        eraStart.setBound(Bound.deserialize(jsonNode));
         return eraStart;
     }
 }

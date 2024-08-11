@@ -26,9 +26,9 @@ public class EraSummaries extends QueryResponse {
 
     public static EraSummaries deserialize(long msgId, JsonNode jsonNode) {
         EraSummaries eraSummaries = new EraSummaries(msgId);
-        for (JsonNode node : jsonNode) {
-            eraSummaries.getEraSummaryList().add(EraSummary.deserialize(node));
-        }
+//        for (JsonNode node : jsonNode) {
+//            eraSummaries.getEraSummaryList().add(EraSummary.deserialize(node));
+//        }
         return eraSummaries;
     }
 }

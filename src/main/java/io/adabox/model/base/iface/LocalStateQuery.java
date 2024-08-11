@@ -1,6 +1,7 @@
 package io.adabox.model.base.iface;
 
 import io.adabox.model.query.response.*;
+import io.adabox.model.query.response.models.Bound;
 import io.adabox.model.query.response.models.Point;
 import io.adabox.model.query.response.models.PointOrOrigin;
 import io.adabox.model.query.response.models.Utxo;
@@ -51,14 +52,14 @@ public interface LocalStateQuery {
      *
      * @return {@link EraStart}
      */
-    OgmiosResponse.EraStart eraStart();
+    Bound eraStart();
 
     /**
      * Era bounds and slotting parameters details, required for proper slot arithmetic.
      *
      * @return {@link EraSummaries}
      */
-    EraSummaries eraSummaries();
+    List<io.adabox.model.query.response.models.EraSummary> eraSummaries();
 
     /**
      * Get the Shelley's genesis configuration.

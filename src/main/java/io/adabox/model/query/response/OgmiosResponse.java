@@ -5,10 +5,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.adabox.model.Amount;
-import io.adabox.model.query.response.models.Point;
-import io.adabox.model.query.response.models.ProtocolParametersV650;
-import io.adabox.model.query.response.models.Utxo;
-import io.adabox.model.query.response.models.UtxoByAddressResponse;
+import io.adabox.model.query.response.models.EraStart;
+import io.adabox.model.query.response.models.*;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +22,9 @@ import java.util.stream.Collectors;
         @JsonSubTypes.Type(value = OgmiosResponse.ChainTip.class, name = "queryLedgerState/tip"),
         @JsonSubTypes.Type(value = OgmiosResponse.CurrentEpoch.class, name = "queryLedgerState/epoch"),
         @JsonSubTypes.Type(value = OgmiosResponse.CurrentProtocolParameters.class, name = "queryLedgerState/protocolParameters"),
-        @JsonSubTypes.Type(value = OgmiosResponse.EraStart.class, name = "queryLedgerState/eraStart"),
+        @JsonSubTypes.Type(value = OgmiosResponse.EraStartResponse.class, name = "queryLedgerState/eraStart"),
         @JsonSubTypes.Type(value = OgmiosResponse.UtxoByAddress.class, name = "queryLedgerState/utxo"),
+        @JsonSubTypes.Type(value = OgmiosResponse.EraSummaryResponse.class, name = "queryLedgerState/eraSummaries"),
 })
 @Slf4j
 public abstract class OgmiosResponse<T> {
@@ -81,13 +80,35 @@ public abstract class OgmiosResponse<T> {
 
     }
 
-    public static class EraStart extends OgmiosResponse<io.adabox.model.query.response.models.EraStart> {
+    public static class EraStartResponse extends OgmiosResponse<Bound> {
 
-        public io.adabox.model.query.response.models.EraStart result;
+        public EraStart result;
 
         @Override
-        public io.adabox.model.query.response.models.EraStart getResult() {
-            return result;
+        public Bound getResult() {
+            return new Bound(result.getTime().getSeconds(), result.getSlot(), result.getEpoch());
+        }
+    }
+
+    public static class EraSummaryResponse extends OgmiosResponse<List<io.adabox.model.query.response.models.EraSummary>> {
+
+        public List<EraSummary> result;
+
+        @Override
+        public List<io.adabox.model.query.response.models.EraSummary> getResult() {
+            return result.stream().map(eraSummary -> {
+                        Bound start = new Bound(eraSummary.getStart().getTime().getSeconds(),
+                                eraSummary.getStart().getSlot(),
+                                eraSummary.getStart().getEpoch());
+                        Bound end = new Bound(eraSummary.getEnd().getTime().getSeconds(),
+                                eraSummary.getEnd().getSlot(),
+                                eraSummary.getEnd().getEpoch());
+                        EraParameters eraParameters = new EraParameters(eraSummary.getParameters().getEpochLength(),
+                                eraSummary.getParameters().getSlotLength().getMilliseconds(),
+                                eraSummary.getParameters().getSafeZone());
+                        return new io.adabox.model.query.response.models.EraSummary(start, end, eraParameters);
+                    })
+                    .collect(Collectors.toList());
         }
     }
 

@@ -2,9 +2,8 @@ package io.adabox;
 
 import io.adabox.client.OgmiosWSClient;
 import io.adabox.model.query.response.*;
-import io.adabox.model.query.response.models.Point;
-import io.adabox.model.query.response.models.ProtocolParametersV650;
-import io.adabox.model.query.response.models.Utxo;
+import io.adabox.model.query.response.models.EraSummary;
+import io.adabox.model.query.response.models.*;
 import io.adabox.model.tx.response.EvaluateTxResponse;
 import io.adabox.model.tx.response.SubmitTxResponse;
 import io.adabox.util.HexUtil;
@@ -80,14 +79,14 @@ class OgmiosWSClientIntegrationTest {
 
     @Test
     void eraStartTest() {
-        OgmiosResponse.EraStart eraStart = ogmiosTestnetClient.eraStart();
-        Assertions.assertNotNull(eraStart);
-        log.info(eraStart.toString());
+        Bound eraStartResponse = ogmiosTestnetClient.eraStart();
+        Assertions.assertNotNull(eraStartResponse);
+        log.info(eraStartResponse.toString());
     }
 
-    //    @Test
+    @Test
     void eraSummariesTest() {
-        EraSummaries eraSummaries = ogmiosTestnetClient.eraSummaries();
+        List<EraSummary> eraSummaries = ogmiosTestnetClient.eraSummaries();
         Assertions.assertNotNull(eraSummaries);
         log.info(eraSummaries.toString());
     }

@@ -8,6 +8,8 @@ import io.adabox.model.chain.response.AcquireResponse;
 import io.adabox.model.chain.response.RequestNextResponse;
 import io.adabox.model.query.request.*;
 import io.adabox.model.query.response.*;
+import io.adabox.model.query.response.models.Bound;
+import io.adabox.model.query.response.models.EraSummary;
 import io.adabox.model.query.response.models.Point;
 import io.adabox.model.query.response.models.Utxo;
 import io.adabox.model.tx.response.EvaluateTxResponse;
@@ -45,7 +47,7 @@ public class OgmiosWSClient extends WebSocketClient implements LocalTxSubmission
     @Override
     public void onMessage(String message) {
         log.info("Received: {}", message);
-        OgmiosResponse response = OgmiosResponse.deserialize(message);
+        OgmiosResponse<?> response = OgmiosResponse.deserialize(message);
         if (response == null) {
             log.error("Response is Null");
             return;
@@ -146,14 +148,13 @@ public class OgmiosWSClient extends WebSocketClient implements LocalTxSubmission
     }
 
     @Override
-    public OgmiosResponse.EraStart eraStart() {
-        return (OgmiosResponse.EraStart) send(new EraStartRequest());
+    public Bound eraStart() {
+        return ((OgmiosResponse.EraStartResponse) send(new EraStartRequest())).getResult();
     }
 
     @Override
-    public EraSummaries eraSummaries() {
-//        return (EraSummaries) send(new EraSummariesRequest());
-        return null;
+    public List<EraSummary> eraSummaries() {
+        return ((OgmiosResponse.EraSummaryResponse) send(new EraSummariesRequest())).getResult();
     }
 
     @Override
