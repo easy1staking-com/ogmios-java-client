@@ -8,6 +8,7 @@ import io.adabox.model.chain.response.AcquireResponse;
 import io.adabox.model.chain.response.RequestNextResponse;
 import io.adabox.model.query.request.*;
 import io.adabox.model.query.response.*;
+import io.adabox.model.query.response.models.Utxo;
 import io.adabox.model.tx.response.EvaluateTxResponse;
 import io.adabox.model.tx.response.SubmitTxResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -228,7 +229,9 @@ public class OgmiosWSClient extends WebSocketClient implements LocalTxSubmission
     }
 
     @Override
-    public OgmiosResponse.UtxoByAddress utxoByAddress(String address) throws InvalidParameterException {
-        return (OgmiosResponse.UtxoByAddress) send(new UtxoByAddressRequest(address));
+    public List<Utxo> utxoByAddress(String address) {
+        OgmiosResponse.UtxoByAddress utxoByAddress = (OgmiosResponse.UtxoByAddress) send(new UtxoByAddressRequest(address));
+        log.info("utxoByAddress: {}", utxoByAddress);
+        return utxoByAddress.getResult();
     }
 }
