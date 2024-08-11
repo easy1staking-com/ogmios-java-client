@@ -19,6 +19,17 @@ public class UtxoByAddressResponse {
         private String id;
     }
 
+    @Getter
+    @Setter
+    @ToString
+    public static class Script {
+
+        private String language;
+
+        private String cbor;
+
+    }
+
     private Transaction transaction;
 
     private Integer index;
@@ -28,4 +39,9 @@ public class UtxoByAddressResponse {
     private Map<String, Map<String, Long>> value;
 
     private String datum;
+
+    private String datumHash;
+
+    private Script script;
+
 }

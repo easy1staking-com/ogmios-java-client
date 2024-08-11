@@ -8,6 +8,7 @@ import io.adabox.model.chain.response.AcquireResponse;
 import io.adabox.model.chain.response.RequestNextResponse;
 import io.adabox.model.query.request.*;
 import io.adabox.model.query.response.*;
+import io.adabox.model.query.response.models.Point;
 import io.adabox.model.query.response.models.Utxo;
 import io.adabox.model.tx.response.EvaluateTxResponse;
 import io.adabox.model.tx.response.SubmitTxResponse;
@@ -29,7 +30,7 @@ public class OgmiosWSClient extends WebSocketClient implements LocalTxSubmission
 
     private static final long TIMEOUT = 60; // Sec
     private final AtomicLong msgId = new AtomicLong(0L);
-    private final ConcurrentHashMap<Long, BlockingQueue<OgmiosResponse>> blockingQueueConcurrentHashMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, BlockingQueue<OgmiosResponse<?>>> blockingQueueConcurrentHashMap = new ConcurrentHashMap<>();
 
     public OgmiosWSClient(URI serverURI) {
         super(serverURI);
@@ -70,12 +71,12 @@ public class OgmiosWSClient extends WebSocketClient implements LocalTxSubmission
         // if the error is fatal then onClose will be called additionally
     }
 
-    private OgmiosResponse send(Request request) {
-        OgmiosResponse queryResponse = null;
+    private OgmiosResponse<?> send(Request request) {
+        OgmiosResponse<?> queryResponse = null;
         long msgIdentifier = msgId.incrementAndGet();
         request.setMsgId(msgIdentifier);
         send(request.toString());
-        BlockingQueue<OgmiosResponse> messageBlockingQueue = new ArrayBlockingQueue<>(1);
+        BlockingQueue<OgmiosResponse<?>> messageBlockingQueue = new ArrayBlockingQueue<>(1);
         blockingQueueConcurrentHashMap.put(msgIdentifier, messageBlockingQueue);
         try {
             queryResponse = messageBlockingQueue.poll(TIMEOUT, TimeUnit.SECONDS);
@@ -124,13 +125,13 @@ public class OgmiosWSClient extends WebSocketClient implements LocalTxSubmission
     /* LocalStateQuery */
 
     @Override
-    public OgmiosResponse.BlockHeight blockHeight() {
-        return (OgmiosResponse.BlockHeight) send(new BlockHeightRequest());
+    public Long blockHeight() {
+        return ((OgmiosResponse.BlockHeight) send(new BlockHeightRequest())).getResult();
     }
 
     @Override
-    public OgmiosResponse.ChainTip chainTip() {
-        return (OgmiosResponse.ChainTip) send(new ChainTipRequest());
+    public Point chainTip() {
+        return ((OgmiosResponse.ChainTip) send(new ChainTipRequest())).getResult();
     }
 
     @Override
@@ -156,8 +157,8 @@ public class OgmiosWSClient extends WebSocketClient implements LocalTxSubmission
     }
 
     @Override
-    public OgmiosResponse.CurrentEpoch currentEpoch() {
-        return (OgmiosResponse.CurrentEpoch) send(new CurrentEpochRequest());
+    public Long currentEpoch() {
+        return ((OgmiosResponse.CurrentEpoch) send(new CurrentEpochRequest())).getResult();
     }
 
     @Override

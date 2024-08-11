@@ -2,6 +2,7 @@ package io.adabox;
 
 import io.adabox.client.OgmiosWSClient;
 import io.adabox.model.query.response.*;
+import io.adabox.model.query.response.models.Point;
 import io.adabox.model.query.response.models.ProtocolParametersV650;
 import io.adabox.model.query.response.models.Utxo;
 import io.adabox.model.tx.response.EvaluateTxResponse;
@@ -35,21 +36,20 @@ class OgmiosWSClientIntegrationTest {
 
     @Test
     void blockHeightTest() {
-        OgmiosResponse.BlockHeight blockHeight = ogmiosMainnetClient.blockHeight();
+        Long blockHeight = ogmiosMainnetClient.blockHeight();
         Assertions.assertNotNull(blockHeight);
         log.info(blockHeight.toString());
     }
 
     @Test
     void chainTipTest() {
-        OgmiosResponse.ChainTip chainTip = ogmiosTestnetClient.chainTip();
+        Point chainTip = ogmiosTestnetClient.chainTip();
         Assertions.assertNotNull(chainTip);
-        log.info(chainTip.toString());
     }
 
     @Test
     void currentEpochTest() {
-        OgmiosResponse.CurrentEpoch currentEpoch = ogmiosTestnetClient.currentEpoch();
+        Long currentEpoch = ogmiosTestnetClient.currentEpoch();
         Assertions.assertNotNull(currentEpoch);
         log.info(currentEpoch.toString());
     }
@@ -177,7 +177,7 @@ class OgmiosWSClientIntegrationTest {
 
     @Test
     void utxoByAddressTest() {
-        List<Utxo> utxoByAddress = ogmiosTestnetClient.utxoByAddress("addr1z8j753650lawuwna0suplxrpjdgdsq99qxekrxjuqklx88zrgt6vrx8paps567pa8qtj9wzah2gpfhme6933fq2vfmnsd75dz7");
+        List<Utxo> utxoByAddress = ogmiosTestnetClient.utxoByAddress("addr1zy5th50h46anh3v7zdvh7ve6amac7k4h3mdfvt0p6czm8z9kp2avt5gp297dnxhxcmy6kkptepsr5pa409qa7gf8stzsxg8sx3");
         Assertions.assertNotNull(utxoByAddress);
         log.info(utxoByAddress.toString());
     }
