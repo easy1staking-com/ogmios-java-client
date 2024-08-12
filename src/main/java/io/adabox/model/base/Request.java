@@ -42,7 +42,7 @@ public abstract class Request extends Message {
                 .build();
         try {
             String jsonRequest = objectMapper.writeValueAsString(request);
-            log.info("jsonRequest: {}", jsonRequest);
+            log.debug("jsonRequest: {}", jsonRequest);
             return jsonRequest;
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

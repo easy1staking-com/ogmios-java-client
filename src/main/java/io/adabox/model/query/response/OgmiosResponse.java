@@ -138,9 +138,9 @@ public abstract class OgmiosResponse<T> {
         }
     }
 
-    public static OgmiosResponse deserialize(String messageJson) {
+    public static OgmiosResponse<?> deserialize(String messageJson) {
         try {
-            log.info("messageJson: {}", messageJson);
+            log.debug("messageJson: {}", messageJson);
             return new ObjectMapper().readerFor(OgmiosResponse.class).readValue(messageJson);
         } catch (JsonProcessingException e) {
             log.warn("Cannot deserialize message.", e);

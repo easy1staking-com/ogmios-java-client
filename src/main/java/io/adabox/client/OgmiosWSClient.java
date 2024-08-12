@@ -232,8 +232,6 @@ public class OgmiosWSClient extends WebSocketClient implements LocalTxSubmission
 
     @Override
     public List<Utxo> utxoByAddress(String address) {
-        OgmiosResponse.UtxoByAddress utxoByAddress = (OgmiosResponse.UtxoByAddress) send(new UtxoByAddressRequest(address));
-        log.info("utxoByAddress: {}", utxoByAddress);
-        return utxoByAddress.getResult();
+        return ((OgmiosResponse.UtxoByAddress) send(new UtxoByAddressRequest(address))).getResult();
     }
 }
