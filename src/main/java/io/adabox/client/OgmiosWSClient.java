@@ -46,7 +46,7 @@ public class OgmiosWSClient extends WebSocketClient implements LocalTxSubmission
 
     @Override
     public void onMessage(String message) {
-        log.info("Received: {}", message);
+        log.debug("Received: {}", message);
         OgmiosResponse<?> response = OgmiosResponse.deserialize(message);
         if (response == null) {
             log.error("Response is Null");
