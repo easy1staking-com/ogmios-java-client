@@ -13,8 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "method", visible = true)
 @JsonSubTypes({
@@ -119,16 +119,21 @@ public abstract class OgmiosResponse<T> {
 
         @Override
         public List<Utxo> getResult() {
+            log.info("result: {}", result);
             return result.stream()
                     .map(utxoByAddressResponse -> {
-                        List<Amount> amounts = utxoByAddressResponse.getValue().entrySet().stream().map(entry -> {
+                        List<Amount> amounts = utxoByAddressResponse.getValue().entrySet().stream().flatMap(entry -> {
                                     String policy = entry.getKey(); //ada or policyId
                                     if (policy.equals("ada")) {
-                                        return new Amount("lovelace", BigInteger.valueOf(entry.getValue().entrySet().stream().findFirst().get().getValue()));
+                                        return Stream.of(new Amount("lovelace", BigInteger.valueOf(entry.getValue().entrySet().stream().findFirst().get().getValue())));
                                     } else {
-                                        Map.Entry<String, Long> asset = entry.getValue().entrySet().stream().findFirst().get();
-                                        String unit = policy + asset.getKey();
-                                        return new Amount(unit, BigInteger.valueOf(asset.getValue()));
+                                        return entry.getValue()
+                                                .entrySet()
+                                                .stream()
+                                                .map(asset -> {
+                                                    var unit = policy + asset.getKey();
+                                                    return new Amount(unit, BigInteger.valueOf(asset.getValue()));
+                                                });
                                     }
                                 })
                                 .collect(Collectors.toList());

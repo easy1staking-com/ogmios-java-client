@@ -181,6 +181,14 @@ class OgmiosWSClientIntegrationTest {
         log.info(utxoByAddress.toString());
     }
 
+    @Test
+    void utxoByAddressTest2() {
+        List<Utxo> utxoByAddress = ogmiosTestnetClient.utxoByAddress("addr1zy5th50h46anh3v7zdvh7ve6amac7k4h3mdfvt0p6czm8z9kp2avt5gp297dnxhxcmy6kkptepsr5pa409qa7gf8stzsxg8sx3");
+        utxoByAddress.forEach(utxo -> log.info("utxo: {}", utxo));
+        Assertions.assertNotNull(utxoByAddress);
+        log.info(utxoByAddress.toString());
+    }
+
     //    @Test
     void submitTransaction() {
         String txHash = "g6QAgYJYIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGCglg5AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBGgAehICCWDkBAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIaAHgXXAIaAAH6pAMZHkahAIGCWCABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFhA169grjPSrzUUEcFEXHlZBSaZC/pzy7NzK1TvMi2qFC5ohAI0EPi+PBbpvVIHbyuza/ON/gNKnwRljp9WGXq4D/Y=";
