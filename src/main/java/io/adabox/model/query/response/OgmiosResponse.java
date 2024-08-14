@@ -119,7 +119,6 @@ public abstract class OgmiosResponse<T> {
 
         @Override
         public List<Utxo> getResult() {
-            log.info("result: {}", result);
             return result.stream()
                     .map(utxoByAddressResponse -> {
                         List<Amount> amounts = utxoByAddressResponse.getValue().entrySet().stream().flatMap(entry -> {
