@@ -61,6 +61,9 @@ public class ProtocolParametersV650 {
         @JsonProperty("plutus:v2")
         private List<Integer> plutusV2;
 
+        @JsonProperty("plutus:v3")
+        private List<Integer> plutusV3;
+
     }
 
     private Integer minFeeCoefficient;

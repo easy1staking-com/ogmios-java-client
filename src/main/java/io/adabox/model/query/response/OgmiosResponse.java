@@ -136,7 +136,11 @@ public abstract class OgmiosResponse<T> {
                                     }
                                 })
                                 .collect(Collectors.toList());
-                        return new Utxo(utxoByAddressResponse.getTransaction().getId(), utxoByAddressResponse.getIndex().longValue(), amounts, utxoByAddressResponse.getDatum());
+                        return new Utxo(utxoByAddressResponse.getTransaction().getId(),
+                                utxoByAddressResponse.getIndex().longValue(),
+                                amounts,
+                                utxoByAddressResponse.getDatum(),
+                                utxoByAddressResponse.getDatumHash());
                     })
                     .collect(Collectors.toList());
         }
