@@ -23,6 +23,7 @@ public class Utxo {
     private Long index;
     private List<Amount> amountList;
     private String datum;
+    private String datumHash;
 
     public static Utxo deserialize(JsonNode arrayNode) {
         Utxo utxo = null;
@@ -31,6 +32,7 @@ public class Utxo {
         Long index = null;
         List<Amount> amountList = null;
         String datum = null;
+        String datumHash = null;
         while (iterator.hasNext()) {
             JsonNode jsonObject = iterator.next();
             if (jsonObject.has("txId")) {
@@ -45,8 +47,11 @@ public class Utxo {
             if (jsonObject.has("datum")) {
                 datum = jsonObject.get("datum").asText();
             }
+            if (jsonObject.has("datumHash")) {
+                datumHash = jsonObject.get("datumHash").asText();
+            }
         }
-        return new Utxo(txId, index, amountList, datum);
+        return new Utxo(txId, index, amountList, datum, datumHash);
     }
 
     private static List<Amount> deserializeAmountList(JsonNode jsonNode) {
